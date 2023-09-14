@@ -339,6 +339,10 @@ docker_setup_db() {
 			docker_process_sql --database=mysql <<<"GRANT ALL ON \`${MYSQL_DATABASE//_/\\_}\`.* TO '$MYSQL_USER'@'%' ;"
 		fi
 	fi
+ 	mysql_note "Createing BGP to MySQL database"
+	docker_process_sql --database=mysql <<<"CREATE DATABASE IF NOT EXISTS 'bgp_virtualtable' ;"
+	docker_process_sql --database=bgp_virtualtable <<<"create table bgp_virtualroutetable_V4 ( idx INT NOT NULL AUTO_INCREMENT, prefixs TEXT(65535), aspath TEXT(65535), localpreference INT(20), community TEXT(65535), extcommunity TEXT(65535), largecommunity TEXT(65535), PRIMARY KEY(idx) ) CHARSET=utf8 ;"
+	docker_process_sql --database=bgp_virtualtable <<<"create table bgp_virtualroutetable_V6 ( idx INT NOT NULL AUTO_INCREMENT, prefixs TEXT(65535), aspath TEXT(65535), localpreference INT(20), community TEXT(65535), extcommunity TEXT(65535), largecommunity TEXT(65535), PRIMARY KEY(idx) ) CHARSET=utf8 ;"
 }
 
 _mysql_passfile() {
